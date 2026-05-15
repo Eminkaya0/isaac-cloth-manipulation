@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+*.usd
+*.usda
+# converted G1 USD lands here when running g1_urdf_import.py — regenerate it, don't track it
+configuration/
