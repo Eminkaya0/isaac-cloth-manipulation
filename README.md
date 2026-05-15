@@ -5,6 +5,12 @@ Unitree G1 humanoid) picking up and flipping a particle cloth on a workbench.
 Built incrementally, with three different demos plus a one-shot URDF→USD
 converter for the Unitree G1.
 
+## Demo Video
+
+[![Unitree G1 + Franka Manipulating Particle Cloth — Isaac Sim 5.1 Demo](https://img.youtube.com/vi/VYdbWHmFab4/maxresdefault.jpg)](https://youtu.be/VYdbWHmFab4)
+
+▶ **Watch on YouTube:** https://youtu.be/VYdbWHmFab4
+
 ## What you get
 
 | File | What it does |
