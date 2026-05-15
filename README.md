@@ -149,8 +149,50 @@ between world (`body0` empty) and the inner `pelvis/pelvis` link with
   The newer Deformable (FEM) cloth path requires a different rig — not
   attempted here.
 
+## Future Work: Isaac Lab Port (Paused)
+
+The natural next step is to lift the G1 demo into **Isaac Lab**, which ships
+prebuilt G1 configs (`G1_CFG`, `G1_MINIMAL_CFG`, `G1_INSPIRE_FTP_CFG`) with
+gravity off, root link welded, and PD gains tuned for manipulation, plus a
+ready `DifferentialIKController` — exactly the pieces we hand-rolled here.
+
+Status as of this commit:
+
+- Isaac Lab `main` cloned at `~/IsaacLab`, symlinked to Isaac Sim 5.1.0 via
+  `_isaac_sim` and installed (`./isaaclab.sh -i`).
+- Locomotion env `Isaac-Velocity-Flat-G1-Play-v0` loads and runs (G1
+  articulation visible, falls without policy — expected).
+- A first IK script (`g1_right_arm_ik_demo.py`, not in this repo yet) using
+  `InteractiveScene` + `DifferentialIKController` fails at `sim.reset()` with:
+  ```
+  PhysX error: Physics::createScene: desc.isValid() is false!
+  unable to create a PhysicsScene.
+  Failed to create simulation view backend
+  AttributeError: 'NoneType' object has no attribute 'create_articulation_view'
+  ```
+  The stock Franka tutorial `scripts/tutorials/05_controllers/run_diff_ik.py`
+  fails identically, so it is **not** a G1-specific bug — it is a known
+  Isaac Lab `main` × Isaac Sim **5.1.0** binding gap (Lab is currently
+  validated against Isaac Sim 5.0 LTS / 4.5 LTS).
+
+When picking this back up:
+
+1. Either pin to Isaac Sim 5.0 LTS or 4.5 LTS, or wait for an Isaac Lab
+   release with 5.1 support.
+2. Reuse `G1_INSPIRE_FTP_CFG` (29-DOF + Inspire 5-finger hand, gravity off,
+   root fixed) as the robot config.
+3. Wire `DifferentialIKController` to the right-arm chain
+   (`right_shoulder_*`, `right_elbow_joint`, `right_wrist_*` + an EE body
+   such as `right_wrist_yaw_link`).
+4. Replace the scripted Cartesian goal cycle with the cloth's current
+   position — particle cloth attachments work the same as in Isaac Sim.
+
+The eventual goal is closer to "G1 squats slightly, reaches across a
+workbench, picks a soft cloth, places it" — which Isaac Lab makes tractable
+because the IK + actuator tuning is already solved.
+
 ## Credits
 
 - Unitree G1 URDF + meshes: [unitreerobotics/unitree_ros](https://github.com/unitreerobotics/unitree_ros)
-- Isaac Sim: NVIDIA
+- Isaac Sim & Isaac Lab: NVIDIA
 - Built collaboratively, with lots of trial-and-error joint tuning.
